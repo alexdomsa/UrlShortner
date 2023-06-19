@@ -53,6 +53,6 @@ public class UrlService
     {
         var urlBytes = Encoding.UTF8.GetBytes(originalUrl);
         var hashBytes = _hashingService.ComputeHash(urlBytes);
-        return Convert.ToHexString(hashBytes);
+        return Convert.ToHexString(hashBytes).ToLower();
     }
 }
