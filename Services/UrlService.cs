@@ -25,34 +25,38 @@ public class UrlService
             .ToList();
     }
 
-    public Url? GetUrlByShortIdentifier(string shortIdentifier)
+    public Url? GetUrlByShortIdentifier(string shortIdentifier, string userId)
     {
         return _context.Urls
             .AsNoTracking()
-            .SingleOrDefault(item => item.ShortIdentifier == shortIdentifier);
+            .SingleOrDefault(item => item.ShortIdentifier == shortIdentifier && item.UserId == userId);
     }
 
-    public Url? RegisterUrl(Url url)
+    public Url RegisterUrl(Url url, string userId)
     {
-        var shortIdentifier = ComputeShortIdentifier(url.OriginalUrl);
+        var shortIdentifier = ComputeShortIdentifier(url.OriginalUrl, userId);
 
-        var alreadyRegisteredUrl = GetUrlByShortIdentifier(shortIdentifier);
+        var alreadyRegisteredUrl = GetUrlByShortIdentifier(shortIdentifier, userId);
         if (alreadyRegisteredUrl != null)
         {
             return alreadyRegisteredUrl;
         }
 
         url.ShortIdentifier = shortIdentifier;
+        url.UserId = userId;
         _context.Urls.Add(url);
         _context.SaveChanges();
 
         return url;
     }
 
-    private string ComputeShortIdentifier(string originalUrl)
+    private string ComputeShortIdentifier(string originalUrl, string userId)
     {
-        var urlBytes = Encoding.UTF8.GetBytes(originalUrl);
+        // use a combined value for computing shortIdentifier, so that different ussers
+        // can perform the shortening for the same URL
+        var urlBytes = Encoding.UTF8.GetBytes($"{originalUrl}{userId}");
         var hashBytes = _hashingService.ComputeHash(urlBytes);
+
         return Convert.ToHexString(hashBytes).ToLower();
     }
 }

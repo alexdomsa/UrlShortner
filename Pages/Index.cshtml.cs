@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Http.Extensions;
+using System.Security.Claims;
 
 namespace UrlShortner.Pages;
 
@@ -37,7 +38,9 @@ public class IndexModel : PageModel
             return Page();
         }
 
-        var registeredUrl = _service.RegisterUrl(UrlData);
+        var registeredUrl = _service.RegisterUrl(UrlData, 
+            User.FindFirstValue(ClaimTypes.NameIdentifier)
+        );
 
         ShortenedUrl = $"{HttpContext.Request.GetDisplayUrl()}{registeredUrl.ShortIdentifier}";
 
