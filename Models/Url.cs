@@ -11,9 +11,7 @@ public class Url
     [Display(Name = "URL")]
     public string OriginalUrl { get; set; } = default!;
 
-    [Required]
-    public string? ShortIdentifier { get; set; }
+    public string? ShortIdentifier { get; set; } = default!;
 
-    [Required]
-    public string? UserId { get; set; }
+    public string? UserId { get; set; } = default!;
 }

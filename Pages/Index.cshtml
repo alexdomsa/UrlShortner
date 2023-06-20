@@ -4,27 +4,39 @@
     ViewData["Title"] = "URL Shortner";
 }
 
-<div class="card">
-    <div class="card-body">
-        <h5 class="card-title">Specify the URL to be shortened</h5>        
-        <form method="post">
-            <div class="form-group">
-                <input asp-for="UrlData.OriginalUrl" class="form-control" placeholder="Enter text"/>
-                <span asp-validation-for="UrlData.OriginalUrl" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Shorten URL" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
-
-@if (Model.ShortenedUrl != null)
+@if (!User.Identity.IsAuthenticated)
 {
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title">This is the shortened URL</h5>        
-            <a href="@Model.ShortenedUrl" target="_blank">@Model.ShortenedUrl</a>
+            <h5 class="card-title">Login required</h5>
+            <p>Only logged in users are allowed to shorten URLs. In case you don't have an account yet, proceed with registration.</p>
         </div>
     </div>
+}
+else
+{
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Specify the URL to be shortened</h5>        
+            <form method="post">
+                <div class="form-group">
+                    <input asp-for="UrlData.OriginalUrl" class="form-control" placeholder="Enter text"/>
+                    <span asp-validation-for="UrlData.OriginalUrl" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Shorten URL" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+    if (Model.ShortenedUrl != null)
+    {
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">This is the shortened URL</h5>        
+                <a href="@Model.ShortenedUrl" target="_blank">@Model.ShortenedUrl</a>
+            </div>
+        </div>
+    }
 }

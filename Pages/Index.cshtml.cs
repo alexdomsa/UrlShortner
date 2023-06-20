@@ -1,6 +1,5 @@
 ﻿using UrlShortner.Models;
 using UrlShortner.Services;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Http.Extensions;
@@ -8,7 +7,6 @@ using System.Security.Claims;
 
 namespace UrlShortner.Pages;
 
-[Authorize]
 public class IndexModel : PageModel
 {
     private readonly ILogger<IndexModel> _logger;
@@ -33,6 +31,11 @@ public class IndexModel : PageModel
 
     public IActionResult OnPost()
     {
+        if (!User.Identity.IsAuthenticated)
+        {
+            Forbid();
+        }
+
         if (!ModelState.IsValid || UrlData == null)
         {
             return Page();

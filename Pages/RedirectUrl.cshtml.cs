@@ -1,4 +1,3 @@
-using UrlShortner.Models;
 using UrlShortner.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
